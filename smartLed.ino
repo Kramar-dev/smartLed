@@ -1,11 +1,10 @@
 #include <WebSocketsServer.h>
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
 #include "header files/routerData.h"
+#include "header files/blink.h"
 #include "resources/html_page.h"
 
 //#define LED 2
-ESP8266WebServer httpServer(16250);
 WebSocketsServer webSocketServer = WebSocketsServer(16251);
 boolean LEDonoff = false;
 String JSONtxt;
@@ -16,22 +15,24 @@ void setup()
 	RouterData routerData = getRouterData();
 	
 	Serial.begin(115200);
-	//pinMode(LED, OUTPUT);
+	pinMode(LED_BUILTIN, OUTPUT);
 	//-----------------------------------------------
 	WiFi.begin(routerData.ssid, routerData.password);
 	while(WiFi.status() != WL_CONNECTED)
 	{
 		Serial.print(".");
+		blink(25);
 		delay(500);
 	}
 	WiFi.mode(WIFI_STA);
 	Serial.println();
 	Serial.print("Connected. Local IP: ");
 	Serial.println(WiFi.localIP());
+	onConnectionBlinking();
 	//-----------------------------------------------
 	//server.on("/", webpage);
 	//-----------------------------------------------
-	httpServer.begin();
+
 	webSocketServer.begin();
 	webSocketServer.onEvent(webSocketEvent);
 }
@@ -40,7 +41,7 @@ void setup()
 void loop()
 {
 	webSocketServer.loop();
-	httpServer.handleClient();
+
 	//-----------------------------------------------
 	// if(LEDonoff == false) digitalWrite(LED, LOW);
 	// else digitalWrite(LED, HIGH);
@@ -61,6 +62,7 @@ void loop()
 //=====================================================
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t welength)
 {
+	blink(25);
 	String payloadString = (const char *)payload;
 	//Serial.print("payloadString= ");
 	Serial.println(payloadString);
