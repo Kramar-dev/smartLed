@@ -1,23 +1,30 @@
 #include <WebSocketsServer.h>
 #include <ESP8266WiFi.h>
+
+//#include <AsyncUDP.h>
+
 #include "header files/routerData.h"
 #include "header files/blink.h"
+#include "header files/broadcast.h"
+#include "header files/defines.h"
 #include "resources/html_page.h"
 
-//#define LED 2
+
 WebSocketsServer webSocketServer = WebSocketsServer(16251);
-boolean LEDonoff = false;
-String JSONtxt;
+//String JSONtxt;
+extern WiFiUDP udp;
+extern IPAddress broadcastAddress;
 //====================================================================
 
 void setup()
 {
+	Serial.begin(115200);
 	RouterData routerData = getRouterData();
 	
-	Serial.begin(115200);
 	pinMode(LED_BUILTIN, OUTPUT);
 	//-----------------------------------------------
 	WiFi.begin(routerData.ssid, routerData.password);
+	Serial.println();
 	while(WiFi.status() != WL_CONNECTED)
 	{
 		Serial.print(".");
@@ -25,27 +32,32 @@ void setup()
 		delay(500);
 	}
 	WiFi.mode(WIFI_STA);
-	Serial.println();
-	Serial.print("Connected. Local IP: ");
-	Serial.println(WiFi.localIP());
+	Serial.print("\nConnected. Local IP: ");
+	Serial.print(WiFi.localIP());
+	Serial.print("\nBroadcast IP: ");
+	Serial.print(WiFi.broadcastIP());
+
 	onConnectionBlinking();
 	//-----------------------------------------------
 	//server.on("/", webpage);
 	//-----------------------------------------------
 
+	Serial.println("\nStarting UDP...");
+	udp.begin(BCAST_PORT);
+	Serial.print("Broadcast port: ");
+	Serial.print(udp.localPort());
+	Serial.println();
 	webSocketServer.begin();
 	webSocketServer.onEvent(webSocketEvent);
+	setBroadcastIp();
 }
 //====================================================================
 
 void loop()
 {
+	parseBroadcast();
 	webSocketServer.loop();
-
-	//-----------------------------------------------
-	// if(LEDonoff == false) digitalWrite(LED, LOW);
-	// else digitalWrite(LED, HIGH);
-	//-----------------------------------------------
+	delay(1);
 	//String LEDstatus = "OFF";
 	//if(LEDonoff == true)
 		//LEDstatus = "ON";
@@ -66,6 +78,15 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t welengt
 	String payloadString = (const char *)payload;
 	//Serial.print("payloadString= ");
 	Serial.println(payloadString);
+
+
+
+       
+
+
+
+
+
 
 	if(type == WStype_TEXT) //receive text from client
 	{
