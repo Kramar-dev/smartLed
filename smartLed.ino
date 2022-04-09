@@ -2,10 +2,10 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <WebSocketsServer.h>
-#include "header files/routerData.h"
-#include "header files/blink.h"
-#include "header files/broadcast.h"
-#include "header files/defines.h"
+#include "headers/routerData.h"
+#include "headers/blink.h"
+#include "headers/broadcast.h"
+#include "headers/defines.h"
 #include "resources/mainPage.h"
 #include "resources/savedSuccessfully.h"
 

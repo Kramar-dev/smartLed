@@ -1,6 +1,6 @@
-#include "header files/broadcast.h"
-#include "header files/defines.h"
-#include "header files/blink.h"
+#include "headers/broadcast.h"
+#include "headers/defines.h"
+#include "headers/blink.h"
 
 char packetBuffer[PACKET_BUFFER];
 uint8_t sendBuf[] = {0x44, 0x55, 0x50, 0x41}; //DUPA
