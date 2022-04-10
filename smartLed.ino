@@ -7,12 +7,13 @@
 #include "headers/broadcast.h"
 #include "headers/defines.h"
 #include "headers/httpServer.h"
+#include "headers/mode.h"
 
 
 extern WiFiUDP udp;
 extern IPAddress broadcastAddress;
 extern ESP8266WebServer httpServer;
-uint8_t mode = WORK;
+uint8_t mode;
 WebSocketsServer webSocketServer = WebSocketsServer(16251);
 
 //====================================================================
@@ -20,6 +21,8 @@ WebSocketsServer webSocketServer = WebSocketsServer(16251);
 void setup() {
 	Serial.begin(115200);
 	pinMode(LED_BUILTIN, OUTPUT);
+	pinMode(MODE_PIN, INPUT_PULLUP);
+	mode = getMode();
 	
 	if (mode == WORK) {
 		httpServer.close();

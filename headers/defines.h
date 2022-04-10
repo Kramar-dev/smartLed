@@ -7,6 +7,7 @@
 #define MAX_NAME_LEN 64
 #define SOFT_AP_NAME "ESP32"
 #define SOFT_AP_PASSWORD "12345678"
+#define MODE_PIN D1
 
 
 enum Mode {
