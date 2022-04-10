@@ -14,3 +14,8 @@ enum Mode {
     CONFIG,
     WORK
 };
+
+enum Action {
+    CHANGE_COLOR = 0x10,
+    GET_TEMP
+};

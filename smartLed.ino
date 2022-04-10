@@ -11,7 +11,7 @@
 
 
 extern WiFiUDP udp;
-extern IPAddress broadcastAddress;
+//extern IPAddress broadcastAddress;
 extern ESP8266WebServer httpServer;
 uint8_t mode;
 WebSocketsServer webSocketServer = WebSocketsServer(16251);
@@ -46,9 +46,9 @@ void setup() {
 		Serial.print("Broadcast port: ");
 		Serial.print(udp.localPort());
 		Serial.println();
-		webSocketServer.begin();
+		webSocketServer.begin(); //TODO open websocket only if any esp answer through udp
 		webSocketServer.onEvent(webSocketEvent);
-		setBroadcastIp();
+		//setBroadcastIp();
 	}
 	else if (mode == CONFIG) {
 		webSocketServer.close();
@@ -83,6 +83,10 @@ void loop() {
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t welength) {
 	blink(25);
+	
+    //  doAction(Action(packetBuffer[0]));
+
+	
 	String payloadString = (const char *)payload;
 	if(type == WStype_TEXT) {
 		String sendData = "You said: " + payloadString;
