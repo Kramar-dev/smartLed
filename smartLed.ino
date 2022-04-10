@@ -6,15 +6,15 @@
 #include "headers/blink.h"
 #include "headers/broadcast.h"
 #include "headers/defines.h"
-#include "resources/mainPage.h"
-#include "resources/savedSuccessfully.h"
+#include "headers/httpServer.h"
 
 
 extern WiFiUDP udp;
 extern IPAddress broadcastAddress;
-uint8_t mode = CONFIG;
+extern ESP8266WebServer httpServer;
+uint8_t mode = WORK;
 WebSocketsServer webSocketServer = WebSocketsServer(16251);
-ESP8266WebServer httpServer(80);
+
 //====================================================================
 
 void setup() {
@@ -50,7 +50,7 @@ void setup() {
 	else if (mode == CONFIG) {
 		webSocketServer.close();
 		WiFi.mode(WIFI_AP);
-		WiFi.softAP("ESP32", "12345678");
+		WiFi.softAP(SOFT_AP_NAME, SOFT_AP_PASSWORD);
 		httpServer.on("/",  handleHttpServer);
 		httpServer.begin();
 		Serial.println();
@@ -85,18 +85,4 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t welengt
 		String sendData = "You said: " + payloadString;
 		webSocketServer.broadcastTXT(sendData);
 	}
-}
-
-
-
-void handleHttpServer() {
-	if (httpServer.method() == HTTP_POST) {
-		String ssid = httpServer.arg("ssid");
-		String password = httpServer.arg("password");
-		Serial.println("ssid: " + ssid);
-		Serial.println("password: " + password);
-		httpServer.send(200, "text/html", saveSuccessfullyPage);
-	}
-	else
-		httpServer.send(200, "text/html", mainPage);
 }

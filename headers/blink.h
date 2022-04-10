@@ -1,4 +1,4 @@
 #pragma once
 
-void blink(int time);
+void blink(unsigned long time);
 void onConnectionBlinking();//on router connected

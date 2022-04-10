@@ -1,6 +1,6 @@
 #include "headers/blink.h"
 
-void blink(int time) {
+void blink(unsigned long time) {
   digitalWrite(LED_BUILTIN, LOW);
   delay(time);
   digitalWrite(LED_BUILTIN, HIGH);

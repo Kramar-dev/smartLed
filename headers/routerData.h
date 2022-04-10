@@ -1,8 +1,9 @@
 #pragma once
 
 struct RouterData {
-    const char* ssid;
-    const char* password;
+    char ssid[32];
+    char password[32];
 };
 
 RouterData getRouterData();
+void setRouterData(RouterData& routerData);
