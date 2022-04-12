@@ -8,6 +8,12 @@
 #define SOFT_AP_NAME "ESP32"
 #define SOFT_AP_PASSWORD "12345678"
 #define MODE_PIN D1
+#define LED_PIN D2
+
+#define DEVICE_MODE_LEDS 0x10
+#define DEVICE_MODE_TEMP 0x11
+
+#define DEVICE DEVICE_MODE_LEDS
 
 
 enum Mode {

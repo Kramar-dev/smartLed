@@ -8,15 +8,19 @@
 #include "headers/defines.h"
 #include "headers/httpServer.h"
 #include "headers/mode.h"
+#include "headers/leds.h"
+#include "headers/action.h"
 
-
+#if DEVICE == DEVICE_MODE_LEDS
+extern Adafruit_NeoPixel addressedLeds;
+#endif
 extern WiFiUDP udp;
-//extern IPAddress broadcastAddress;
 extern ESP8266WebServer httpServer;
+
 uint8_t mode;
 WebSocketsServer webSocketServer = WebSocketsServer(16251);
 
-//====================================================================
+//############################################################################################
 
 void setup() {
 	Serial.begin(115200);
@@ -48,7 +52,12 @@ void setup() {
 		Serial.println();
 		webSocketServer.begin(); //TODO open websocket only if any esp answer through udp
 		webSocketServer.onEvent(webSocketEvent);
-		//setBroadcastIp();
+		#if DEVICE == DEVICE_MODE_LEDS
+		#if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
+			clock_prescale_set(clock_div_1);
+		#endif
+			addressedLeds.begin();
+		#endif
 	}
 	else if (mode == CONFIG) {
 		webSocketServer.close();
@@ -62,7 +71,8 @@ void setup() {
 	}
 
 }
-//====================================================================
+
+//############################################################################################
 
 void loop() {
 	switch (mode) {
@@ -84,9 +94,8 @@ void loop() {
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t welength) {
 	blink(25);
 	
-    //  doAction(Action(packetBuffer[0]));
+    doAction(payload);
 
-	
 	String payloadString = (const char *)payload;
 	if(type == WStype_TEXT) {
 		String sendData = "You said: " + payloadString;

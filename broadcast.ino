@@ -8,7 +8,6 @@ char packetBuffer[PACKET_BUFFER];
 uint8_t sendBuf[] = {0x44, 0x55, 0x50, 0x41}; //DUPA
 
 WiFiUDP udp;
-//IPAddress broadcastAddress;
 
 void parseBroadcast() {
     int parsedUdpPacket = udp.parsePacket();
@@ -27,10 +26,6 @@ bool sendPacket(const IPAddress& address, const uint8_t* buf, uint8_t bufSize) {
   udp.write(buf, bufSize);
   return (udp.endPacket() == 1);
 }
-
-// void setBroadcastIp() {
-//     broadcastAddress = (uint32_t)WiFi.localIP() | ~((uint32_t)WiFi.subnetMask());
-// }
 
 void onBcastMesageReceived() { //TODO: send by udp id info about current ESP32
     if (!sendPacket(udp.remoteIP(), sendBuf, sizeof(sendBuf)))

@@ -1,16 +1,28 @@
 #include "headers/defines.h"
 #include "headers/action.h"
+#include "headers/leds.h"
 
-void doAction(Action action) {
+#if DEVICE == DEVICE_MODE_LEDS
+extern Adafruit_NeoPixel addressedLeds;
+#endif
+
+void doAction(uint8_t *payload) {
+    Action action = Action(payload[sizeof(SOFT_AP_NAME)]);
+
     switch(action) {
     
-    CHANGE_COLOR:
-        onChangeColor();
+    #if DEVICE == DEVICE_MODE_LEDS
+    case CHANGE_COLOR:
+        onChangeColor(payload[6], payload[7], payload[8]);
     break;
+    #endif
     
-    GET_TEMP:
-    break;
+    #if DEVICE == DEVICE_MODE_TEMP
+    case GET_TEMP:
         onGetTemperature();
+    break;
+    #endif
+    
     default:
         //TODO sendding "unknown action" through websockets
     break;
@@ -18,8 +30,9 @@ void doAction(Action action) {
     }
 }
 
-void onChangeColor() {
-    //TODO Serial.println("changing color");
+void onChangeColor(uint8_t& r, uint8_t& g, uint8_t& b) {
+    addressedLeds.clear();
+    setColor(r, g, b);
 }
 
 void onGetTemperature() {
