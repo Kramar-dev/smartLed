@@ -6,14 +6,14 @@
 extern Adafruit_NeoPixel addressedLeds;
 #endif
 
-void doAction(uint8_t *payload) {
-    Action action = Action(payload[sizeof(SOFT_AP_NAME)]);
-
+void doAction(uint8_t *payload, size_t& welength) {
+    Action action = Action(payload[sizeof(SOFT_AP_NAME)-1]);
     switch(action) {
     
     #if DEVICE == DEVICE_MODE_LEDS
     case CHANGE_COLOR:
-        onChangeColor(payload[6], payload[7], payload[8]);
+        uint8_t colorIndex = sizeof(SOFT_AP_NAME);
+        onChangeColor(payload[colorIndex], payload[colorIndex+1], payload[colorIndex+2]);
     break;
     #endif
     
@@ -23,9 +23,9 @@ void doAction(uint8_t *payload) {
     break;
     #endif
     
-    default:
+    //default:
         //TODO sendding "unknown action" through websockets
-    break;
+    //break;
     
     }
 }

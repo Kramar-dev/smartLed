@@ -75,26 +75,26 @@ void setup() {
 //############################################################################################
 
 void loop() {
-	switch (mode) {
-	case CONFIG:
-		httpServer.handleClient();
-		break;
 	
-	case WORK:
-		parseBroadcast();
-		webSocketServer.loop();
-		//webSocket.broadcastTXT(JSONtxt);
-		break;
-	default:
-		break;
-	}
-	delay(1);
+	
+		switch (mode) {
+		case CONFIG:
+			httpServer.handleClient();
+			break;
+		
+		case WORK:
+			parseBroadcast();
+			webSocketServer.loop();
+			//webSocket.broadcastTXT(JSONtxt);
+			break;
+		}
+		delay(1);
 }
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t welength) {
 	blink(25);
 	
-    doAction(payload);
+    doAction(payload, welength);
 
 	String payloadString = (const char *)payload;
 	if(type == WStype_TEXT) {
