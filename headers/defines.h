@@ -8,7 +8,8 @@
 #define SOFT_AP_NAME "ESP32"
 #define SOFT_AP_PASSWORD "12345678"
 #define MODE_PIN D1
-#define LED_PIN D4//D2 - LED_BUILTIN
+#define LED_STRIP_PIN D4//D2 - LED_BUILTIN
+#define BLINK_PIN D8 //TODO connect another LED
 
 #define DEVICE_MODE_LEDS 0x10
 #define DEVICE_MODE_TEMP 0x11
@@ -23,5 +24,6 @@ enum Mode {
 
 enum Action {
     CHANGE_COLOR = 0x10,
-    GET_TEMP
+    START_GET_TEMP,
+    STOP_GET_TEMP
 };

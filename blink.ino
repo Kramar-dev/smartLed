@@ -1,14 +1,14 @@
 #include "headers/blink.h"
 
 void blink(unsigned long time) {
-  digitalWrite(LED_BUILTIN, LOW);
+  digitalWrite(D8, LOW);
   delay(time);
-  digitalWrite(LED_BUILTIN, HIGH);
+  digitalWrite(D8, HIGH);
 };
 
 void onConnectionBlinking() {
-    for(int i = 0; i < 6; ++i) {
+    for(int i = 0; i < 10; ++i) {
         blink(25);
-        delay(300);
+        delay(100);
     }
 };

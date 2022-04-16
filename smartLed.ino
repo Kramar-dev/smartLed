@@ -1,4 +1,3 @@
-
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <WebSocketsServer.h>
@@ -10,16 +9,23 @@
 #include "headers/mode.h"
 #include "headers/leds.h"
 #include "headers/action.h"
+#include "headers/running.h"
 
-#if DEVICE == DEVICE_MODE_LEDS
-extern Adafruit_NeoPixel addressedLeds;
-#endif
 extern WiFiUDP udp;
 extern ESP8266WebServer httpServer;
+extern Running running;
 
 uint8_t mode;
 WebSocketsServer webSocketServer = WebSocketsServer(16251);
 
+#if DEVICE == DEVICE_MODE_LEDS
+extern Adafruit_NeoPixel addressedLeds;
+#endif
+
+#if DEVICE == DEVICE_MODE_TEMP
+#include "headers/tempSensor.h"
+extern Adafruit_BMP280 bmp;
+#endif
 //############################################################################################
 
 void setup() {
@@ -50,7 +56,7 @@ void setup() {
 		Serial.print("Broadcast port: ");
 		Serial.print(udp.localPort());
 		Serial.println();
-		webSocketServer.begin(); //TODO open websocket only if any esp answer through udp
+		webSocketServer.begin(); //TODO open websocket only if any esp will answer through udp
 		webSocketServer.onEvent(webSocketEvent);
 		#if DEVICE == DEVICE_MODE_LEDS
 		#if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
@@ -58,6 +64,22 @@ void setup() {
 		#endif
 			addressedLeds.begin();
 		#endif
+
+		#if DEVICE == DEVICE_MODE_TEMP
+		if (!bmp.begin(0x76)) {
+    		Serial.println(F("Could not find a valid BMP280 sensor, check wiring or "
+                    	"try a different address!"));
+    		while (1) delay(10);
+
+  		bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+						Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+						Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+						Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+						Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+  		}
+		
+		#endif
+
 	}
 	else if (mode == CONFIG) {
 		webSocketServer.close();
@@ -76,7 +98,6 @@ void setup() {
 
 void loop() {
 	
-	
 		switch (mode) {
 		case CONFIG:
 			httpServer.handleClient();
@@ -85,7 +106,10 @@ void loop() {
 		case WORK:
 			parseBroadcast();
 			webSocketServer.loop();
-			//webSocket.broadcastTXT(JSONtxt);
+			if (running.sendingTemp) {
+				onGetTemperature();
+				delay(500);
+			}
 			break;
 		}
 		delay(1);
