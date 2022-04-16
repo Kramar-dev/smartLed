@@ -67,9 +67,9 @@ void setup() {
 
 		#if DEVICE == DEVICE_MODE_TEMP
 		if (!bmp.begin(0x76)) {
-    		Serial.println(F("Could not find a valid BMP280 sensor, check wiring or "
-                    	"try a different address!"));
-    		while (1) delay(10);
+			Serial.println(F("Could not find a valid BMP280 sensor, check wiring or "
+						"try a different address!"));
+			while (1) delay(10);
 
   		bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
 						Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
@@ -118,7 +118,7 @@ void loop() {
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t welength) {
 	blink(25);
 	
-    doAction(payload, welength);
+	doAction(payload, welength);
 
 	String payloadString = (const char *)payload;
 	if(type == WStype_TEXT) {

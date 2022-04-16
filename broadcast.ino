@@ -10,15 +10,15 @@ uint8_t sendBuf[] = {0x44, 0x55, 0x50, 0x41}; //DUPA
 WiFiUDP udp;
 
 void parseBroadcast() {
-    int parsedUdpPacket = udp.parsePacket();
-    if (parsedUdpPacket) {
-        blink(25);  
-        udp.read(packetBuffer, PACKET_BUFFER);
-        udp.flush();
-        
-        if (String(packetBuffer) == BCAST_CHECK_MESSAGE) 
-            onBcastMesageReceived();
-    }
+	int parsedUdpPacket = udp.parsePacket();
+	if (parsedUdpPacket) {
+		blink(25);  
+		udp.read(packetBuffer, PACKET_BUFFER);
+		udp.flush();
+		
+		if (String(packetBuffer) == BCAST_CHECK_MESSAGE) 
+			onBcastMesageReceived();
+	}
 }
 
 bool sendPacket(const IPAddress& address, const uint8_t* buf, uint8_t bufSize) {
@@ -28,6 +28,6 @@ bool sendPacket(const IPAddress& address, const uint8_t* buf, uint8_t bufSize) {
 }
 
 void onBcastMesageReceived() { //TODO: send by udp id info about current ESP32
-    if (!sendPacket(udp.remoteIP(), sendBuf, sizeof(sendBuf)))
-        Serial.println(F("Error sending broadcast UDP packet!"));
+	if (!sendPacket(udp.remoteIP(), sendBuf, sizeof(sendBuf)))
+		Serial.println(F("Error sending broadcast UDP packet!"));
 }

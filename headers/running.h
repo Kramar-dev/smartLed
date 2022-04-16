@@ -1,5 +1,5 @@
 #pragma once
 
 struct Running {
-    bool sendingTemp = false;
+	bool sendingTemp = false;
 };
