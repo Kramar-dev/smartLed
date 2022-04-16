@@ -7,7 +7,6 @@
 #include "headers/defines.h"
 #include "headers/httpServer.h"
 #include "headers/mode.h"
-#include "headers/leds.h"
 #include "headers/action.h"
 #include "headers/running.h"
 
@@ -19,6 +18,7 @@ uint8_t mode;
 WebSocketsServer webSocketServer = WebSocketsServer(16251);
 
 #if DEVICE == DEVICE_MODE_LEDS
+#include "headers/leds.h"
 extern Adafruit_NeoPixel addressedLeds;
 #endif
 
@@ -30,7 +30,7 @@ extern Adafruit_BMP280 bmp;
 
 void setup() {
 	Serial.begin(115200);
-	pinMode(LED_BUILTIN, OUTPUT);
+	pinMode(D8, OUTPUT);
 	pinMode(MODE_PIN, INPUT_PULLUP);
 	mode = getMode();
 	

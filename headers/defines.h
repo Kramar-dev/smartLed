@@ -14,7 +14,7 @@
 #define DEVICE_MODE_LEDS 0x10
 #define DEVICE_MODE_TEMP 0x11
 
-#define DEVICE DEVICE_MODE_TEMP
+#define DEVICE DEVICE_MODE_LEDS
 
 
 enum Mode {
