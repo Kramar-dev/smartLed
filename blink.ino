@@ -1,14 +1,16 @@
 #include "headers/blink.h"
+#include "headers/defines.h"
 
-void blink(unsigned long time) {
-	digitalWrite(D8, HIGH);
-	delay(time);
-	digitalWrite(D8, LOW);
+Adafruit_NeoPixel signalLed(1, SIGNAL_LED_PIN, NEO_GRB + NEO_KHZ800);
+
+void blink(uint8_t r, uint8_t g, uint8_t b) {
+	setSignalLedColor(0x0, 0x0, 0x0);//digitalWrite(D8, HIGH);
+	delay(25);
+	setSignalLedColor(r, g, b);//digitalWrite(D8, LOW);
 };
 
-void onConnectionBlinking() {
-	for(int i = 0; i < 10; ++i) {
-		blink(25);
-		delay(100);
-	}
+void setSignalLedColor(uint8_t r, uint8_t g, uint8_t b) {
+	signalLed.clear();
+	signalLed.setPixelColor(0, signalLed.Color(r, g, b));
+	signalLed.show();
 };

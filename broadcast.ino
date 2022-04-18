@@ -12,7 +12,7 @@ WiFiUDP udp;
 void parseBroadcast() {
 	int parsedUdpPacket = udp.parsePacket();
 	if (parsedUdpPacket) {
-		blink(25);  
+		blink(0x0, 0xFF, 0x0);  
 		udp.read(packetBuffer, PACKET_BUFFER);
 		udp.flush();
 		

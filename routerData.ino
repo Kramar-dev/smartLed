@@ -1,6 +1,5 @@
 #include <EEPROM.h>
 #include "headers/routerData.h"
-#include "headers/private.h"
 
 RouterData getRouterData() {
 	RouterData routerData;
