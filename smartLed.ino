@@ -12,6 +12,8 @@
 #include "headers/leds.h"
 #include "headers/tempSensor.h"
 
+#include "headers/webupdate.h"
+
 extern WiFiUDP udp;
 extern ESP8266WebServer httpServer;
 extern Running running;
@@ -40,7 +42,6 @@ void setup() {
 
 	if (mode == WORK) {
 		setSignalLedColor(0xFF, 0x0, 0x0);
-		httpServer.close();
 		RouterData routerData = getRouterData();
 		WiFi.begin(routerData.ssid, routerData.password);
 		Serial.println();
@@ -74,16 +75,20 @@ void setup() {
 			Serial.println(F("Could not find a valid BMP280 sensor, check wiring or "
 						"try a different address!"));
 			while (1) delay(10);
-
   		bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
 						Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
 						Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
 						Adafruit_BMP280::FILTER_X16,      /* Filtering. */
 						Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
-  		}
-		
+  		}	
 		#endif
-
+		/*
+  		MDNS.begin(WEBUPDATE_HOST);
+		httpUpdater.setup(&httpServer);
+		httpServer.begin();
+		MDNS.addService("http", "tcp", WEBUPDATE_PORT);
+		Serial.printf("HTTPUpdateServer ready! Open http://%s.local/update in your browser\n", host);*/
+		webUpdateSetup();
 	}
 	else if (mode == CONFIG) {
 		setSignalLedColor(0x0, 0x0, 0xFF);
@@ -108,6 +113,10 @@ void loop() {
 			break;
 		
 		case WORK:
+			httpServer.handleClient();
+  			MDNS.update();
+			
+			
 			if (WiFi.status() == WL_CONNECTED)
 				setSignalLedColor(0x0, 0xff, 0x0);
 			else

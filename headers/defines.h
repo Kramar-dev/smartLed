@@ -11,6 +11,9 @@
 #define LED_STRIP_PIN D0//D2 - LED_BUILTIN
 #define SIGNAL_LED_PIN D8
 
+#define WEBUPDATE_HOST "esp32-webupdate" //TODO get unique host
+#define WEBUPDATE_PORT 80
+
 #define DEVICE_MODE_LEDS 0x10
 #define DEVICE_MODE_TEMP 0x11
 
