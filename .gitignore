@@ -3,3 +3,5 @@ plan.txt
 readMe.md
 libs
 bin
+*.html
+smartLed
